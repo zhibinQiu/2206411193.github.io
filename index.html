@@ -191,6 +191,444 @@
             
 
   
+    <article id="post-批量解压" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/08/03/%E6%89%B9%E9%87%8F%E8%A7%A3%E5%8E%8B/">批量解压</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/08/03/%E6%89%B9%E9%87%8F%E8%A7%A3%E5%8E%8B/" class="archive-article-date">
+        <time datetime="2021-08-03T15:17:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-03</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>做语音识别有将数据压缩文件解压的的需求，修修改改忙了3小时写了个简单的脚本。</p>
+<h1 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h1><p>使用方法：<br>linux: bash 脚本位置 含有压缩文件的文件夹</p>
+<h1 id="已知bug"><a href="#已知bug" class="headerlink" title="已知bug"></a>已知bug</h1><p>1.会弹出找不到*zip的情况  （不影响运行，who care）</p><br>2.估计能够运行压缩文件包含压缩文件的情况 （懒得测试了，看运气吧）<p></p><br>3.第二个目录必须填绝对路径 （代码太乱了，也懒得改了，pwd自己复制吧）<p></p><p></p>
+<h1 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h1><p>遍历传入文件夹的所有文件</p><br>如果是文件夹-&gt;递归调用自身<p></p><br>如果不是文件夹—&gt;依次遍历所有的zip文件，rar文件<p></p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">clear</span><br><span class="line">echo &#x27;######将某个目录下所有的zip,rar在原目录下解压#####&#x27;</span><br><span class="line">echo &#x27;######作者：邱智斌##########################&#x27;</span><br><span class="line">echo &#x27;######创建时间:2021.8.3####################&#x27;</span><br><span class="line">echo &#x27;######version:1.2########################&#x27;</span><br><span class="line">echo &#x27;######开始解压..###########################&#x27;</span><br><span class="line">function read_dir()&#123;</span><br><span class="line">echo  $1 为目录文件，正在进入....</span><br><span class="line">for file in `ls $1` </span><br><span class="line">do</span><br><span class="line">if [ -d $1&quot;/&quot;$file ] </span><br><span class="line">then</span><br><span class="line">cd $1&quot;/&quot;$file</span><br><span class="line">echo &quot;当前路径:&quot;$(pwd)</span><br><span class="line">read_dir $1&quot;/&quot;$file</span><br><span class="line">echo 返回到上级目录进行处理...</span><br><span class="line">cd ..</span><br><span class="line">else</span><br><span class="line">echo &quot;当前路径:&quot;$(pwd)</span><br><span class="line">ZIP_FILES=$(ls $(pwd)&quot;/&quot;*.zip)</span><br><span class="line">    for zip_file in $ZIP_FILES; do</span><br><span class="line">	    mkdir -p $(echo $zip_file | cut -d . -f1)</span><br><span class="line">	    unzip -jo $zip_file -d $(echo $zip_file | cut -d . -f1)</span><br><span class="line">	    echo 正在解压缩 $zip_file ....</span><br><span class="line">	done</span><br><span class="line">RAR_FILES=$(ls $(pwd)&quot;/&quot;*.rar)</span><br><span class="line">	 for rar_file in $RAR_FILES; do</span><br><span class="line">	    mkdir -p $(echo $rar_file | cut -d . -f1)</span><br><span class="line">	    unzip -jo $rar_file -d $(echo $rar_file | cut -d . -f1)</span><br><span class="line">	    echo 正在解压缩 $rar_file ....</span><br><span class="line">	done</span><br><span class="line">fi</span><br><span class="line">done</span><br><span class="line">&#125;</span><br><span class="line">read_dir $1</span><br><span class="line">echo &#x27;######所有文件已解压完成!####################&#x27;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">zip</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/08/03/%E6%89%B9%E9%87%8F%E8%A7%A3%E5%8E%8B/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-常用的shell指令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/08/03/%E5%B8%B8%E7%94%A8%E7%9A%84shell%E6%8C%87%E4%BB%A4/">常用的shell指令</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/08/03/%E5%B8%B8%E7%94%A8%E7%9A%84shell%E6%8C%87%E4%BB%A4/" class="archive-article-date">
+        <time datetime="2021-08-03T06:57:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-03</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <hr>
+<p>typora-copy-images-to: pictures<br>typora-root-url: pictures</p>
+<hr>
+<p>[toc]</p>
+<h1 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h1><ul>
+<li>了解shell中的通配符</li>
+<li>熟悉grep、cut、sort等小工具和shell中的通配符的使用</li>
+</ul>
+<p>#一、文本处理工具</p>
+<p>##1. ==grep工具==</p>
+<blockquote>
+<p>grep是**==行==**过滤工具；用于根据关键字进行行过滤</p>
+</blockquote>
+<h3 id="语法和选项"><a href="#语法和选项" class="headerlink" title="语法和选项"></a>语法和选项</h3><p><strong>语法：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep [选项] &#x27;关键字&#x27; 文件名</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>常见选项：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">OPTIONS:</span><br><span class="line">    <span class="literal">-i</span>: 不区分大小写</span><br><span class="line">    <span class="literal">-v</span>: 查找不包含指定内容的行,反向选择</span><br><span class="line">    <span class="literal">-w</span>: 按单词搜索</span><br><span class="line">    <span class="literal">-o</span>: 打印匹配关键字</span><br><span class="line">    <span class="literal">-c</span>: 统计匹配到的行数</span><br><span class="line">    <span class="literal">-n</span>: 显示行号</span><br><span class="line">    <span class="literal">-r</span>: 逐层遍历目录查找</span><br><span class="line">    <span class="literal">-A</span>: 显示匹配行及后面多少行	</span><br><span class="line">    <span class="literal">-B</span>: 显示匹配行及前面多少行</span><br><span class="line">    <span class="literal">-C</span>: 显示匹配行前后多少行</span><br><span class="line">    <span class="literal">-l</span>：只列出匹配的文件名</span><br><span class="line">    <span class="literal">-L</span>：列出不匹配的文件名</span><br><span class="line">    <span class="literal">-e</span>: 使用正则匹配</span><br><span class="line">    <span class="literal">-E</span>:使用扩展正则匹配</span><br><span class="line">    ^key:以关键字开头</span><br><span class="line">    key<span class="variable">$</span>:以关键字结尾</span><br><span class="line">    ^<span class="variable">$</span>:匹配空行</span><br><span class="line">    -<span class="literal">-color</span>=auto ：可以将找到的关键词部分加上颜色的显示</span><br></pre></td></tr></table></figure>
+
+<p><strong>颜色显示（别名设置）：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">临时设置：</span><br><span class="line"><span class="comment"># alias grep=&#x27;grep --color=auto&#x27;			//只针对当前终端和当前用户生效</span></span><br><span class="line"></span><br><span class="line">永久设置：</span><br><span class="line"><span class="number">1</span>）全局（针对所有用户生效）</span><br><span class="line">vim /etc/bashrc</span><br><span class="line">alias grep=<span class="string">&#x27;grep --color=auto&#x27;</span></span><br><span class="line">source /etc/bashrc</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>）局部（针对具体的某个用户）</span><br><span class="line">vim ~/.bashrc</span><br><span class="line">alias grep=<span class="string">&#x27;grep --color=auto&#x27;</span></span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><strong>举例说明：</strong></p>
+<p>==说明：不要直接使用/etc/passwd文件，将其拷贝到/tmp下做实验！==</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep -i root passwd						忽略大小写匹配包含root的行</span></span><br><span class="line"><span class="comment"># grep -w ftp passwd 						精确匹配ftp单词</span></span><br><span class="line"><span class="comment"># grep -w hello passwd 						精确匹配hello单词;自己添加包含hello的行到文件</span></span><br><span class="line"><span class="comment"># grep -wo ftp passwd 						打印匹配到的关键字ftp</span></span><br><span class="line"><span class="comment"># grep -n root passwd 						打印匹配到root关键字的行好</span></span><br><span class="line"><span class="comment"># grep -ni root passwd 						忽略大小写匹配统计包含关键字root的行</span></span><br><span class="line"><span class="comment"># grep -nic root passwd						忽略大小写匹配统计包含关键字root的行数</span></span><br><span class="line"><span class="comment"># grep -i ^root passwd 						忽略大小写匹配以root开头的行</span></span><br><span class="line"><span class="comment"># grep bash$ passwd 							匹配以bash结尾的行</span></span><br><span class="line"><span class="comment"># grep -n ^$ passwd 							匹配空行并打印行号</span></span><br><span class="line"><span class="comment"># grep ^# /etc/vsftpd/vsftpd.conf		匹配以#号开头的行</span></span><br><span class="line"><span class="comment"># grep -v ^# /etc/vsftpd/vsftpd.conf	匹配不以#号开头的行</span></span><br><span class="line"><span class="comment"># grep -A 5 mail passwd 				 	匹配包含mail关键字及其后5行</span></span><br><span class="line"><span class="comment"># grep -B 5 mail passwd 				 	匹配包含mail关键字及其前5行</span></span><br><span class="line"><span class="comment"># grep -C 5 mail passwd 					匹配包含mail关键字及其前后5行</span></span><br></pre></td></tr></table></figure>
+
+<p>##2. ==cut工具==</p>
+<blockquote>
+<p>cut是**==列==**截取工具，用于列的截取</p>
+</blockquote>
+<h3 id="语法和选项-1"><a href="#语法和选项-1" class="headerlink" title="语法和选项"></a>语法和选项</h3><p><strong>语法：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cut 选项  文件名</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>常见选项：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-c</span>:	以字符为单位进行分割,截取</span><br><span class="line"><span class="literal">-d</span>:	自定义分隔符，默认为制表符\t</span><br><span class="line"><span class="operator">-f</span>:	与<span class="literal">-d</span>一起使用，指定截取哪个区域</span><br></pre></td></tr></table></figure>
+
+<p><strong>举例说明:</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cut -d: -f1 1.txt 			以:冒号分割，截取第1列内容</span></span><br><span class="line"><span class="comment"># cut -d: -f1,6,7 1.txt 	以:冒号分割，截取第1,6,7列内容</span></span><br><span class="line"><span class="comment"># cut -c4 1.txt 				截取文件中每行第4个字符</span></span><br><span class="line"><span class="comment"># cut -c1-4 1.txt 			截取文件中每行的1-4个字符</span></span><br><span class="line"><span class="comment"># cut -c4-10 1.txt 			截取文件中每行的4-10个字符</span></span><br><span class="line"><span class="comment"># cut -c5- 1.txt 				从第5个字符开始截取后面所有字符</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>课堂练习：</strong><br>用小工具列出你当系统的运行级别。5/3</p>
+<ol>
+<li>如何查看系统运行级别<ul>
+<li>命令<code>runlevel</code></li>
+<li>文件<code>/etc/inittab</code></li>
+</ul>
+</li>
+<li>如何过滤运行级别</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">runlevel |cut <span class="literal">-c3</span></span><br><span class="line">runlevel | cut <span class="literal">-d</span> <span class="string">&#x27; &#x27;</span> <span class="literal">-f2</span></span><br><span class="line">grep <span class="literal">-v</span> <span class="string">&#x27;^#&#x27;</span> /etc/inittab | cut <span class="literal">-d</span>: <span class="literal">-f2</span></span><br><span class="line">grep <span class="string">&#x27;^id&#x27;</span> /etc/inittab |cut <span class="literal">-d</span>: <span class="literal">-f2</span></span><br><span class="line">grep <span class="string">&quot;initdefault:<span class="variable">$</span>&quot;</span> /etc/inittab | cut <span class="literal">-c4</span></span><br><span class="line">grep <span class="literal">-v</span> ^<span class="comment"># /etc/inittab |cut -c4</span></span><br><span class="line">grep <span class="string">&#x27;id:&#x27;</span> /etc/inittab |cut <span class="literal">-d</span>: <span class="literal">-f2</span></span><br><span class="line">cut <span class="literal">-d</span><span class="string">&#x27;:&#x27;</span> <span class="literal">-f2</span> /etc/inittab |grep <span class="literal">-v</span> ^<span class="comment">#</span></span><br><span class="line">cut <span class="literal">-c4</span> /etc/inittab |tail <span class="literal">-1</span></span><br><span class="line">cut <span class="literal">-d</span>: <span class="literal">-f2</span> /etc/inittab |tail <span class="literal">-1</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-sort工具"><a href="#3-sort工具" class="headerlink" title="3. sort工具"></a>3. sort工具</h2><blockquote>
+<p>sort工具用于排序;它将文件的每一行作为一个单位，从首字符向后，依次按ASCII码值进行比较，最后将他们按升序输出。</p>
+</blockquote>
+<h4 id="语法和选项-2"><a href="#语法和选项-2" class="headerlink" title="语法和选项"></a>语法和选项</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-u</span> ：去除重复行</span><br><span class="line"><span class="literal">-r</span> ：降序排列，默认是升序</span><br><span class="line"><span class="literal">-o</span> : 将排序结果输出到文件中,类似重定向符号&gt;</span><br><span class="line"><span class="literal">-n</span> ：以数字排序，默认是按字符排序</span><br><span class="line"><span class="literal">-t</span> ：分隔符</span><br><span class="line"><span class="literal">-k</span> ：第N列</span><br><span class="line"><span class="literal">-b</span> ：忽略前导空格。</span><br><span class="line"><span class="literal">-R</span> ：随机排序，每次运行的结果均不同</span><br></pre></td></tr></table></figure>
+
+<p><strong>举例说明</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sort -n -t: -k3 1.txt 			按照用户的uid进行升序排列</span></span><br><span class="line"><span class="comment"># sort -nr -t: -k3 1.txt 			按照用户的uid进行降序排列</span></span><br><span class="line"><span class="comment"># sort -n 2.txt 						按照数字排序</span></span><br><span class="line"><span class="comment"># sort -nu 2.txt 						按照数字排序并且去重</span></span><br><span class="line"><span class="comment"># sort -nr 2.txt </span></span><br><span class="line"><span class="comment"># sort -nru 2.txt </span></span><br><span class="line"><span class="comment"># sort -nru 2.txt </span></span><br><span class="line"><span class="comment"># sort -n 2.txt -o 3.txt 			按照数字排序并将结果重定向到文件</span></span><br><span class="line"><span class="comment"># sort -R 2.txt </span></span><br><span class="line"><span class="comment"># sort -u 2.txt </span></span><br></pre></td></tr></table></figure>
+
+<p>##4.uniq工具</p>
+<blockquote>
+<p>uniq用于去除**==连续==<strong>的</strong>==重复==**行</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">常见选项：</span><br><span class="line"><span class="literal">-i</span>: 忽略大小写</span><br><span class="line"><span class="literal">-c</span>: 统计重复行次数</span><br><span class="line"><span class="literal">-d</span>:只显示重复行</span><br><span class="line"></span><br><span class="line">举例说明：</span><br><span class="line"><span class="comment"># uniq 2.txt </span></span><br><span class="line"><span class="comment"># uniq -d 2.txt </span></span><br><span class="line"><span class="comment"># uniq -dc 2.txt </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-tee工具"><a href="#5-tee工具" class="headerlink" title="5.tee工具"></a>5.tee工具</h2><blockquote>
+<p>tee工具是从标准输入读取并写入到标准输出和文件，即：双向覆盖重定向（屏幕输出|文本输入）</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">选项：</span><br><span class="line"><span class="literal">-a</span> 双向追加重定向</span><br><span class="line"></span><br><span class="line"><span class="comment"># echo hello world</span></span><br><span class="line"><span class="comment"># echo hello world|tee file1</span></span><br><span class="line"><span class="comment"># cat file1 </span></span><br><span class="line"><span class="comment"># echo 999|tee -a file1</span></span><br><span class="line"><span class="comment"># cat file1 </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-diff工具"><a href="#6-diff工具" class="headerlink" title="6.diff工具"></a>6.diff工具</h2><blockquote>
+<p>diff工具用于逐行比较文件的不同</p>
+</blockquote>
+<p>注意：diff描述两个文件不同的方式是告诉我们==怎样改变第一个==文件之后==与第二个文件匹配==。</p>
+<h3 id="语法和选项-3"><a href="#语法和选项-3" class="headerlink" title="语法和选项"></a>语法和选项</h3><p><strong>语法：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">diff</span> [选项] 文件<span class="number">1</span> 文件<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>常用选项：</strong></p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>不检查空格</td>
+<td></td>
+</tr>
+<tr>
+<td>-B</td>
+<td>不检查空白行</td>
+<td></td>
+</tr>
+<tr>
+<td>-i</td>
+<td>不检查大小写</td>
+<td></td>
+</tr>
+<tr>
+<td>-w</td>
+<td>忽略所有的空格</td>
+<td></td>
+</tr>
+<tr>
+<td>–normal</td>
+<td>正常格式显示(默认)</td>
+<td></td>
+</tr>
+<tr>
+<td>-c</td>
+<td>上下文格式显示</td>
+<td></td>
+</tr>
+<tr>
+<td>-u</td>
+<td>合并格式显示</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>举例说明：</strong></p>
+<ul>
+<li>比较两个==普通文件==异同，文件准备：</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># cat file1</span></span><br><span class="line">aaaa</span><br><span class="line"><span class="number">111</span></span><br><span class="line">hello world</span><br><span class="line"><span class="number">222</span></span><br><span class="line"><span class="number">333</span></span><br><span class="line">bbb</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment">#</span></span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># cat file2</span></span><br><span class="line">aaa</span><br><span class="line">hello</span><br><span class="line"><span class="number">111</span></span><br><span class="line"><span class="number">222</span></span><br><span class="line">bbb</span><br><span class="line"><span class="number">333</span></span><br><span class="line">world</span><br></pre></td></tr></table></figure>
+
+<p>1）正常显示</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">diff</span>目的：file1如何改变才能和file2匹配</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># diff file1 file2</span></span><br><span class="line"><span class="number">1</span>c1,<span class="number">2</span>					第一个文件的第<span class="number">1</span>行需要改变(c=change)才能和第二个文件的第<span class="number">1</span>到<span class="number">2</span>行匹配			</span><br><span class="line">&lt; aaaa				小于号<span class="string">&quot;&lt;&quot;</span>表示左边文件(file1)文件内容</span><br><span class="line">---					---表示分隔符</span><br><span class="line">&gt; aaa					大于号<span class="string">&quot;&gt;&quot;</span>表示右边文件(file2)文件内容</span><br><span class="line">&gt; hello</span><br><span class="line"><span class="number">3</span>d3					第一个文件的第<span class="number">3</span>行删除(d=delete)后才能和第二个文件的第<span class="number">3</span>行匹配</span><br><span class="line">&lt; hello world</span><br><span class="line"><span class="number">5</span>d4					第一个文件的第<span class="number">5</span>行删除后才能和第二个文件的第<span class="number">4</span>行匹配</span><br><span class="line">&lt; <span class="number">333</span></span><br><span class="line"><span class="number">6</span>a6,<span class="number">7</span>					第一个文件的第<span class="number">6</span>行增加(a=add)内容后才能和第二个文件的第<span class="number">6</span>到<span class="number">7</span>行匹配</span><br><span class="line">&gt; <span class="number">333</span>					需要增加的内容在第二个文件里是<span class="number">333</span>和world</span><br><span class="line">&gt; world</span><br></pre></td></tr></table></figure>
+
+<p>2）上下文格式显示</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># diff -c file1 file2</span></span><br><span class="line">前两行主要列出需要比较的文件名和文件的时间戳；文件名前面的符号***表示file1，---表示file2</span><br><span class="line">*** file1       <span class="number">2019</span><span class="literal">-04</span><span class="literal">-16</span> <span class="number">16</span>:<span class="number">26</span>:<span class="number">05.748650262</span> +<span class="number">0800</span></span><br><span class="line">--- file2       <span class="number">2019</span><span class="literal">-04</span><span class="literal">-16</span> <span class="number">16</span>:<span class="number">26</span>:<span class="number">30.470646030</span> +<span class="number">0800</span></span><br><span class="line">***************	我是分隔符</span><br><span class="line">*** <span class="number">1</span>,<span class="number">6</span> ****		以***开头表示file1文件，<span class="number">1</span>,<span class="number">6</span>表示<span class="number">1</span>到<span class="number">6</span>行</span><br><span class="line">! aaaa				!表示该行需要修改才与第二个文件匹配</span><br><span class="line">  <span class="number">111</span></span><br><span class="line">- hello world		-表示需要删除该行才与第二个文件匹配</span><br><span class="line">  <span class="number">222</span></span><br><span class="line">- <span class="number">333</span>					-表示需要删除该行才与第二个文件匹配</span><br><span class="line">  bbb</span><br><span class="line">--- <span class="number">1</span>,<span class="number">7</span> ----		以---开头表示file2文件，<span class="number">1</span>,<span class="number">7</span>表示<span class="number">1</span>到<span class="number">7</span>行</span><br><span class="line">! aaa					表示第一个文件需要修改才与第二个文件匹配</span><br><span class="line">! hello				表示第一个文件需要修改才与第二个文件匹配</span><br><span class="line">  <span class="number">111</span></span><br><span class="line">  <span class="number">222</span></span><br><span class="line">  bbb</span><br><span class="line">+ <span class="number">333</span>					表示第一个文件需要加上该行才与第二个文件匹配</span><br><span class="line">+ world				表示第一个文件需要加上该行才与第二个文件匹配</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>3）合并格式显示</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># diff -u file1 file2</span></span><br><span class="line">前两行主要列出需要比较的文件名和文件的时间戳；文件名前面的符号---表示file1，+++表示file2</span><br><span class="line">--- file1       <span class="number">2019</span><span class="literal">-04</span><span class="literal">-16</span> <span class="number">16</span>:<span class="number">26</span>:<span class="number">05.748650262</span> +<span class="number">0800</span></span><br><span class="line">+++ file2       <span class="number">2019</span><span class="literal">-04</span><span class="literal">-16</span> <span class="number">16</span>:<span class="number">26</span>:<span class="number">30.470646030</span> +<span class="number">0800</span></span><br><span class="line"><span class="selector-tag">@</span><span class="selector-tag">@</span> <span class="literal">-1</span>,<span class="number">6</span> +<span class="number">1</span>,<span class="number">7</span> <span class="selector-tag">@</span><span class="selector-tag">@</span></span><br><span class="line"><span class="literal">-aaaa</span></span><br><span class="line">+aaa</span><br><span class="line">+hello</span><br><span class="line"> <span class="number">111</span></span><br><span class="line"><span class="literal">-hello</span> world</span><br><span class="line"> <span class="number">222</span></span><br><span class="line"><span class="literal">-333</span></span><br><span class="line"> bbb</span><br><span class="line">+<span class="number">333</span></span><br><span class="line">+world</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>比较两个==目录不同==</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">默认情况下也会比较两个目录里相同文件的内容</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">tmp</span>]<span class="comment"># diff dir1 dir2</span></span><br><span class="line"><span class="built_in">diff</span> dir1/file1 dir2/file1</span><br><span class="line"><span class="number">0</span>a1</span><br><span class="line">&gt; hello</span><br><span class="line">Only <span class="keyword">in</span> dir1: file3</span><br><span class="line">Only <span class="keyword">in</span> dir2: test1</span><br><span class="line">如果只需要比较两个目录里文件的不同，不需要进一步比较文件内容，需要加<span class="literal">-q</span>选项</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">tmp</span>]<span class="comment"># diff -q dir1 dir2</span></span><br><span class="line">Files dir1/file1 and dir2/file1 differ</span><br><span class="line">Only <span class="keyword">in</span> dir1: file3</span><br><span class="line">Only <span class="keyword">in</span> dir2: test1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>其他小技巧：</strong></p>
+<p>有时候我们需要以一个文件为标准，去修改其他文件，并且修改的地方较多时，我们可以通过打补丁的方式完成。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>）先找出文件不同，然后输出到一个文件</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># diff -uN file1 file2 &gt; file.patch</span></span><br><span class="line"><span class="literal">-u</span>:上下文模式</span><br><span class="line"><span class="literal">-N</span>:将不存在的文件当作空文件</span><br><span class="line"><span class="number">2</span>）将不同内容打补丁到文件</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># patch file1 file.patch</span></span><br><span class="line">patching file file1</span><br><span class="line"><span class="number">3</span>）测试验证</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment"># diff file1 file2</span></span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span> ~]<span class="comment">#</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="7-paste工具"><a href="#7-paste工具" class="headerlink" title="7. paste工具"></a>7. paste工具</h2><blockquote>
+<p>paste工具用于合并文件行</p>
+</blockquote>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">常用选项：</span><br><span class="line"><span class="literal">-d</span>：自定义间隔符，默认是tab</span><br><span class="line"><span class="literal">-s</span>：串行处理，非并行</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-tr工具"><a href="#8-tr工具" class="headerlink" title="8. tr工具"></a>8. tr工具</h2><blockquote>
+<p> tr用于字符转换，替换和删除；主要用于==删除文件中控制字符==或进行==字符转换==</p>
+</blockquote>
+<h3 id="语法和选项-4"><a href="#语法和选项-4" class="headerlink" title="语法和选项"></a>语法和选项</h3><p><strong>语法：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">用法<span class="number">1</span>：命令的执行结果交给tr处理，其中string1用于查询，string2用于转换处理</span><br><span class="line"></span><br><span class="line"> commands|tr  <span class="string">&#x27;string1&#x27;</span>  <span class="string">&#x27;string2&#x27;</span></span><br><span class="line"></span><br><span class="line">用法<span class="number">2</span>：tr处理的内容来自文件，记住要使用<span class="string">&quot;&lt;&quot;</span>标准输入</span><br><span class="line"></span><br><span class="line"> tr  <span class="string">&#x27;string1&#x27;</span>  <span class="string">&#x27;string2&#x27;</span> &lt; filename</span><br><span class="line"></span><br><span class="line">用法<span class="number">3</span>：匹配string1进行相应操作，如删除操作</span><br><span class="line"></span><br><span class="line"> tr [<span class="type">options</span>] <span class="string">&#x27;string1&#x27;</span> &lt; filename</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用选项：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-d</span> 删除字符串<span class="number">1</span>中所有输入字符。</span><br><span class="line"><span class="literal">-s</span> 删除所有重复出现字符序列，只保留第一个；即将重复出现字符串压缩为一个字符串</span><br></pre></td></tr></table></figure>
+
+<p><strong>常匹配字符串：</strong></p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>==a-z==或[:lower:]</td>
+<td>匹配所有小写字母</td>
+<td>所有大小写和数字[a-zA-Z0-9]</td>
+</tr>
+<tr>
+<td>==A-Z==或[:upper:]</td>
+<td>匹配所有大写字母</td>
+<td></td>
+</tr>
+<tr>
+<td>==0-9==或[:digit:]</td>
+<td>匹配所有数字</td>
+<td></td>
+</tr>
+<tr>
+<td>[:alnum:]</td>
+<td>匹配所有字母和数字</td>
+<td></td>
+</tr>
+<tr>
+<td>[:alpha:]</td>
+<td>匹配所有字母</td>
+<td></td>
+</tr>
+<tr>
+<td>[:blank:]</td>
+<td>所有水平空白</td>
+<td></td>
+</tr>
+<tr>
+<td>[:punct:]</td>
+<td>匹配所有标点符号</td>
+<td></td>
+</tr>
+<tr>
+<td>[:space:]</td>
+<td>所有水平或垂直的空格</td>
+<td></td>
+</tr>
+<tr>
+<td>[:cntrl:]</td>
+<td>所有控制字符</td>
+<td>\f Ctrl-L        走行换页<br>\n Ctrl-J      换行</td>
+</tr>
+<tr>
+<td>\r Ctrl-M        回车</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>\t Ctrl-I      tab键</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>举例说明：</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">shell01</span>]<span class="comment"># cat 3.txt 	自己创建该文件用于测试</span></span><br><span class="line">ROOT:x:<span class="number">0</span>:<span class="number">0</span>:root:/root:/bin/bash</span><br><span class="line">bin:x:<span class="number">1</span>:<span class="number">1</span>:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:<span class="number">2</span>:<span class="number">2</span>:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:<span class="number">3</span>:<span class="number">4</span>:adm:/var/adm:/sbin/nologin</span><br><span class="line"><span class="built_in">lp</span>:x:<span class="number">4</span>:<span class="number">7</span>:<span class="built_in">lp</span>:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:<span class="number">5</span>:<span class="number">0</span>:sync:/sbin:/bin/sync</span><br><span class="line">shutdown:x:<span class="number">6</span>:<span class="number">0</span>:shutdown:/sbin:/sbin/shutdown</span><br><span class="line">halt:x:<span class="number">7</span>:<span class="number">0</span>:halt:/sbin:/sbin/halt</span><br><span class="line">mail:x:<span class="number">8</span>:<span class="number">12</span>:mail:/var/spool/mail:/sbin/nologin</span><br><span class="line">uucp:x:<span class="number">10</span>:<span class="number">14</span>:uucp:/var/spool/uucp:/sbin/nologin</span><br><span class="line">boss02:x:<span class="number">516</span>:<span class="number">511</span>::/home/boss02:/bin/bash</span><br><span class="line">vip:x:<span class="number">517</span>:<span class="number">517</span>::/home/vip:/bin/bash</span><br><span class="line">stu1:x:<span class="number">518</span>:<span class="number">518</span>::/home/stu1:/bin/bash</span><br><span class="line">mailnull:x:<span class="number">47</span>:<span class="number">47</span>::/var/spool/mqueue:/sbin/nologin</span><br><span class="line">smmsp:x:<span class="number">51</span>:<span class="number">51</span>::/var/spool/mqueue:/sbin/nologin</span><br><span class="line">aaaaaaaaaaaaaaaaaaaa</span><br><span class="line">bbbbbb111111122222222222233333333cccccccc</span><br><span class="line">hello world <span class="number">888</span></span><br><span class="line"><span class="number">666</span></span><br><span class="line"><span class="number">777</span></span><br><span class="line"><span class="number">999</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># tr -d &#x27;[:/]&#x27; &lt; 3.txt 				删除文件中的:和/</span></span><br><span class="line"><span class="comment"># cat 3.txt |tr -d &#x27;[:/]&#x27;			删除文件中的:和/</span></span><br><span class="line"><span class="comment"># tr &#x27;[0-9]&#x27; &#x27;@&#x27; &lt; 3.txt 			将文件中的数字替换为@符号</span></span><br><span class="line"><span class="comment"># tr &#x27;[a-z]&#x27; &#x27;[A-Z]&#x27; &lt; 3.txt 		将文件中的小写字母替换成大写字母</span></span><br><span class="line"><span class="comment"># tr -s &#x27;[a-z]&#x27; &lt; 3.txt 			匹配小写字母并将重复的压缩为一个</span></span><br><span class="line"><span class="comment"># tr -s &#x27;[a-z0-9]&#x27; &lt; 3.txt 		匹配小写字母和数字并将重复的压缩为一个</span></span><br><span class="line"><span class="comment"># tr -d &#x27;[:digit:]&#x27; &lt; 3.txt 		删除文件中的数字</span></span><br><span class="line"><span class="comment"># tr -d &#x27;[:blank:]&#x27; &lt; 3.txt 		删除水平空白</span></span><br><span class="line"><span class="comment"># tr -d &#x27;[:space:]&#x27; &lt; 3.txt 		删除所有水平和垂直空白</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h4><ol>
+<li>使用小工具分别截取当前主机IP；截取NETMASK；截取广播地址；截取MAC地址</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig eth0|grep &#x27;Bcast&#x27;|tr -d &#x27;[a-zA-Z ]&#x27;|cut -d: -f2,3,4</span></span><br><span class="line"><span class="number">10.1</span>.<span class="number">1.1</span>:<span class="number">10.1</span>.<span class="number">1.255</span>:<span class="number">255.255</span>.<span class="number">255.0</span></span><br><span class="line"><span class="comment"># ifconfig eth0|grep &#x27;Bcast&#x27;|tr -d &#x27;[a-zA-Z ]&#x27;|cut -d: -f2,3,4|tr &#x27;:&#x27; &#x27;\n&#x27;</span></span><br><span class="line"><span class="number">10.1</span>.<span class="number">1.1</span></span><br><span class="line"><span class="number">10.1</span>.<span class="number">1.255</span></span><br><span class="line"><span class="number">255.255</span>.<span class="number">255.0</span></span><br><span class="line"><span class="comment"># ifconfig eth0|grep &#x27;HWaddr&#x27;|cut -d: -f2-|cut -d&#x27; &#x27; -f4</span></span><br><span class="line"><span class="number">00</span>:<span class="number">0</span>C:<span class="number">29</span>:<span class="number">25</span>:AE:<span class="number">54</span></span><br><span class="line"><span class="comment"># ifconfig eth0|grep &#x27;HW&#x27;|tr -s &#x27; &#x27;|cut -d&#x27; &#x27; -f5</span></span><br><span class="line"><span class="number">00</span>:<span class="number">0</span>C:<span class="number">29</span>:B4:<span class="number">9</span>E:<span class="number">4</span>E</span><br><span class="line"></span><br><span class="line"><span class="comment"># ifconfig eth1|grep Bcast|cut -d: -f2|cut -d&#x27; &#x27; -f1</span></span><br><span class="line"><span class="comment"># ifconfig eth1|grep Bcast|cut -d: -f2|tr -d &#x27;[ a-zA-Z]&#x27;</span></span><br><span class="line"><span class="comment"># ifconfig eth1|grep Bcast|tr -d &#x27;[:a-zA-Z]&#x27;|tr &#x27; &#x27; &#x27;@&#x27;|tr -s &#x27;@&#x27;|tr &#x27;@&#x27; &#x27;\n&#x27;|grep -v ^$</span></span><br><span class="line"><span class="comment"># ifconfig eth0|grep &#x27;Bcast&#x27;|tr -d [:alpha:]|tr &#x27;[ :]&#x27; &#x27;\n&#x27;|grep -v ^$</span></span><br><span class="line"><span class="comment"># ifconfig eth1|grep HWaddr|cut -d &#x27; &#x27; -f11</span></span><br><span class="line"><span class="comment"># ifconfig eth0|grep HWaddr|tr -s &#x27; &#x27;|cut -d&#x27; &#x27; -f5</span></span><br><span class="line"><span class="comment"># ifconfig eth1|grep HWaddr|tr -s &#x27; &#x27;|cut -d&#x27; &#x27; -f5</span></span><br><span class="line"><span class="comment"># ifconfig eth0|grep &#x27;Bcast&#x27;|tr -d &#x27;a-zA-Z:&#x27;|tr &#x27; &#x27; &#x27;\n&#x27;|grep -v &#x27;^$&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>将系统中所有普通用户的用户名、密码和默认shell保存到一个文件中，要求用户名密码和默认shell之间用tab键分割</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep &#x27;bash$&#x27; passwd |grep -v &#x27;root&#x27;|cut -d: -f1,2,7|tr &#x27;:&#x27; &#x27;\t&#x27; |tee abc.txt</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="二、bash的特性"><a href="#二、bash的特性" class="headerlink" title="二、bash的特性"></a>二、bash的特性</h1><p>##1、命令和文件自动补全</p>
+<p>Tab只能补全==命令和文件== （RHEL6/Centos6）</p>
+<p>##2、常见的快捷键</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">^c   			终止前台运行的程序</span><br><span class="line">^z	  			将前台运行的程序挂起到后台</span><br><span class="line">^d   			退出 等价<span class="keyword">exit</span></span><br><span class="line">^l   			清屏 </span><br><span class="line">^a |home  	光标移到命令行的最前端</span><br><span class="line">^e |<span class="keyword">end</span>  	光标移到命令行的后端</span><br><span class="line">^u   			删除光标前所有字符</span><br><span class="line">^k   			删除光标后所有字符</span><br><span class="line">^r	 			搜索历史命令</span><br></pre></td></tr></table></figure>
+
+<p>##3 、==常用的通配符（重点）==</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">*:	匹配<span class="number">0</span>或多个任意字符</span><br><span class="line">?:	匹配任意单个字符</span><br><span class="line">[<span class="type">list</span>]:	匹配[<span class="type">list</span>]中的任意单个字符,或者一组单个字符   [<span class="type">a</span>-<span class="type">z</span>]</span><br><span class="line">[!<span class="type">list</span>]: 匹配除list中的任意单个字符</span><br><span class="line">&#123;string1,string2,...&#125;：匹配string1,string2或更多字符串</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># rm -f file*</span></span><br><span class="line"><span class="comment"># cp *.conf  /dir1</span></span><br><span class="line"><span class="comment"># touch file&#123;1..5&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>##4、==bash中的引号（重点）==</p>
+<ul>
+<li>双引号””   :会把引号的内容当成整体来看待，允许通过$符号引用其他变量值</li>
+<li>单引号’’     :会把引号的内容当成整体来看待，禁止引用其他变量值，shell中特殊符号都被视为普通字符</li>
+<li>反撇号``  :反撇号和$()一样，引号或括号里的命令会优先执行，如果存在嵌套，反撇号不能用</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo &quot;$(hostname)&quot;</span></span><br><span class="line">server</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo &#x27;$(hostname)&#x27;</span></span><br><span class="line"><span class="variable">$</span>(hostname)</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo &quot;hello world&quot;</span></span><br><span class="line">hello world</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo &#x27;hello world&#x27;</span></span><br><span class="line">hello world</span><br><span class="line"></span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo $(date +%F)</span></span><br><span class="line"><span class="number">2018</span><span class="literal">-11</span><span class="literal">-22</span></span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo `echo $(date +%F)`</span></span><br><span class="line"><span class="number">2018</span><span class="literal">-11</span><span class="literal">-22</span></span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo `date +%F`</span></span><br><span class="line"><span class="number">2018</span><span class="literal">-11</span><span class="literal">-22</span></span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo `echo `date +%F``</span></span><br><span class="line">date +%F</span><br><span class="line">[<span class="type">root</span>@<span class="type">MissHou</span>  <span class="type">dir1</span>]<span class="comment"># echo $(echo `date +%F`)</span></span><br><span class="line"><span class="number">2018</span><span class="literal">-11</span><span class="literal">-22</span></span><br></pre></td></tr></table></figure>
+
+
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/08/03/%E5%B8%B8%E7%94%A8%E7%9A%84shell%E6%8C%87%E4%BB%A4/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Mysql优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1046,273 +1484,6 @@ http &#123;
 
 
   
-    <article id="post-二叉树的遍历" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2020/08/03/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/">二叉树的四种遍历(递归+非递归)+深度，宽度</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2020/08/03/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/" class="archive-article-date">
-        <time datetime="2020-08-03T05:56:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-03</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <h2 id="二叉树的类型"><a href="#二叉树的类型" class="headerlink" title="二叉树的类型"></a>二叉树的类型</h2><ul>
-<li>满二叉树：所有分支节点均有左孩子节点和右孩子节点，叶子节点都集中在最下一层。</li>
-<li>完全二叉树：上层满了才有下一层，左面有了才有右面。</li>
-</ul>
-<hr>
-<h3 id="二叉树的性质"><a href="#二叉树的性质" class="headerlink" title="二叉树的性质"></a>二叉树的性质</h3><ul>
-<li>叶子节点数等于双分支节点数+1.（分支=分支，分支=节点-1）求解.</li>
-<li>第 i 层最多有2^(i-1)个节点。</li>
-<li>深度为 k的二叉树，节点数最多为2^k-1.</li>
-<li>左子树2i,右子树2i+1,父亲节点除2.</li>
-<li>天勤p138</li>
-</ul>
-<hr>
-<h3 id="二叉树的存储结构"><a href="#二叉树的存储结构" class="headerlink" title="二叉树的存储结构"></a>二叉树的存储结构</h3><ul>
-<li>顺序存储结构：优点：查找节点效率高。缺点：如果不是完全二叉树，浪费空间。</li>
-<li>链式存储结构<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span> &#123;</span></span><br><span class="line">	Element data;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span>* <span class="title">lchild</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span>* <span class="title">rchild</span>;</span></span><br><span class="line">&#125;BTNode;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<hr>
-<h3 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h3><h4 id="创建一颗二叉树"><a href="#创建一颗二叉树" class="headerlink" title="创建一颗二叉树"></a>创建一颗二叉树</h4><p>中序创建二叉树。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createBT</span><span class="params">(BTNode *&amp;newTree,<span class="keyword">char</span> *ch,<span class="keyword">int</span> begin,<span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (begin &gt; end) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">int</span> mid = begin + (end - begin) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">		newTree = (BTNode*)<span class="built_in">malloc</span>(<span class="built_in"><span class="keyword">sizeof</span></span>(BTNode));</span><br><span class="line">		newTree-&gt;data = ch[mid];</span><br><span class="line">		newTree-&gt;lchild = <span class="literal">NULL</span>;</span><br><span class="line">		newTree-&gt;rchild = <span class="literal">NULL</span>;</span><br><span class="line">		<span class="built_in">createBT</span>(newTree-&gt;lchild,ch,begin,mid<span class="number">-1</span>);</span><br><span class="line">		<span class="built_in">createBT</span>(newTree-&gt;rchild,ch,mid+<span class="number">1</span>,end);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h4><p>先序遍历：每遇到一个节点，先访问，然后再遍历其左右子树；<br>中序遍历：第一次经过时不访问，等遍历完左子树之后再访问，然后遍历右子树；<br>后序遍历：第一次和第二次经过时都不访问，等遍历完该节点的左右子树之后，最后访问该节点；</p>
-<ul>
-<li>注 访问次数的统计以补足叶子的节点的空孩子节点为计数。</li>
-</ul>
-<hr>
-<p>普通遍历路线图。<br><img src="http://data.biancheng.net/uploads/allimg/181229/2-1Q22920434Q44.gif"></p>
-<h5 id="先序遍历（递归"><a href="#先序遍历（递归" class="headerlink" title="先序遍历（递归)"></a>先序遍历（递归)</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrder</span><span class="params">(BTNode *p)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="built_in">visit</span>(p);</span><br><span class="line">		<span class="built_in">preOrder</span>(p-&gt;lchild);</span><br><span class="line">		<span class="built_in">preOrder</span>(p-&gt;rchild);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="中序遍历（递归）"><a href="#中序遍历（递归）" class="headerlink" title="中序遍历（递归）"></a>中序遍历（递归）</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrder</span><span class="params">(BTNode* p)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">	</span><br><span class="line">	    <span class="built_in">inOrder</span>(p-&gt;lchild);</span><br><span class="line">		<span class="built_in">visit</span>(p);</span><br><span class="line">		<span class="built_in">inOrder</span>(p-&gt;rchild);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="后序遍历（递归）"><a href="#后序遍历（递归）" class="headerlink" title="后序遍历（递归）"></a>后序遍历（递归）</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrder</span><span class="params">(BTNode* p)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (p != <span class="literal">NULL</span>) &#123;</span><br><span class="line">	</span><br><span class="line">		<span class="built_in">postOrder</span>(p-&gt;lchild);</span><br><span class="line">		<span class="built_in">postOrder</span>(p-&gt;rchild);</span><br><span class="line">		<span class="built_in">visit</span>(p);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h5 id="先序遍历（非递归"><a href="#先序遍历（非递归" class="headerlink" title="先序遍历（非递归)"></a>先序遍历（非递归)</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preOrderNonrecursion</span><span class="params">(BTNode* p)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (p) &#123;</span><br><span class="line">		BTNode* stack[maxsize];</span><br><span class="line">		BTNode* q;</span><br><span class="line">		<span class="keyword">int</span> top = <span class="number">-1</span>;</span><br><span class="line">		stack[++top] = p;</span><br><span class="line">		<span class="comment">//根节点入栈，循环（出栈，访问，右孩子进栈，左孩子进栈）</span></span><br><span class="line">		<span class="keyword">while</span> (top != <span class="number">-1</span>) &#123;</span><br><span class="line">			q = stack[top--];</span><br><span class="line">			<span class="built_in">visit</span>(q);</span><br><span class="line">			<span class="keyword">if</span> (q-&gt;rchild) stack[++top] = q-&gt;rchild;</span><br><span class="line">			<span class="keyword">if</span> (q-&gt;lchild) stack[++top] = q-&gt;lchild;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="中序遍历（非递归）"><a href="#中序遍历（非递归）" class="headerlink" title="中序遍历（非递归）"></a>中序遍历（非递归）</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inOrderNonCursion</span><span class="params">(BTNode* p)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (p) &#123;</span><br><span class="line">		BTNode* stack[maxsize];</span><br><span class="line">		BTNode* q;</span><br><span class="line">		<span class="keyword">int</span> top = <span class="number">-1</span>;</span><br><span class="line">		q = p;</span><br><span class="line">		<span class="comment">//循环（循环（将当前节点所有左子树入栈），如果栈不为空，出栈访问，找右孩子节点入栈）</span></span><br><span class="line">		<span class="keyword">while</span> (top != <span class="number">-1</span> || q != <span class="literal">NULL</span>) &#123;</span><br><span class="line">			<span class="keyword">while</span>(q != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				stack[++top] = q;</span><br><span class="line">				q = q-&gt;lchild;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//出栈会出现栈空的情况（某个节点没有左子树）</span></span><br><span class="line">			<span class="keyword">if</span> (top != <span class="number">-1</span>) &#123;</span><br><span class="line">				q = stack[top--];</span><br><span class="line">				<span class="built_in">visit</span>(q);</span><br><span class="line">				q = q-&gt;rchild;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		stack[++top] = p;</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="后序遍历（非递归）"><a href="#后序遍历（非递归）" class="headerlink" title="后序遍历（非递归）"></a>后序遍历（非递归）</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postOrderNonRecursion</span><span class="params">(BTNode* bt)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (bt) &#123;</span><br><span class="line">		BTNode* stack1[maxsize];</span><br><span class="line">		BTNode* stack2[maxsize];</span><br><span class="line">		<span class="keyword">int</span> top1, top2;</span><br><span class="line">		top1 = top2 = <span class="number">-1</span>;</span><br><span class="line">		BTNode* q = <span class="literal">NULL</span>;</span><br><span class="line">		stack1[++top1] = bt;</span><br><span class="line">		<span class="keyword">while</span> (top1 != <span class="number">-1</span>) &#123;</span><br><span class="line">			q = stack1[top1--];</span><br><span class="line">			stack2[++top2] = q;</span><br><span class="line">			<span class="comment">//两个栈结构，反向两次，所以先入左孩子，再入右孩子</span></span><br><span class="line">			<span class="keyword">if</span> (q-&gt;lchild!=<span class="literal">NULL</span>) stack1[++top1] = q-&gt;lchild;</span><br><span class="line">			<span class="keyword">if</span> (q-&gt;rchild!=<span class="literal">NULL</span>) stack1[++top1] = q-&gt;rchild;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">while</span> (top2 != <span class="number">-1</span>) &#123;</span><br><span class="line">			q = stack2[top2--];</span><br><span class="line">			<span class="built_in">visit</span>(q);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<p>层次遍历路线图<br><img src="http://data.biancheng.net/uploads/allimg/181229/2-1Q2292043234L.gif"></p>
-<h5 id="层次遍历（循环队列）"><a href="#层次遍历（循环队列）" class="headerlink" title="层次遍历（循环队列）"></a>层次遍历（循环队列）</h5><p>维持一个队列，当前节点进队，若队不为空，（出队，若有左孩子左孩子进队，若有右孩子，右孩子进队）</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">level</span><span class="params">(BTNode* p)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> front,rear;</span><br><span class="line">	BTNode *que[maxsize];</span><br><span class="line">	BTNode* q;</span><br><span class="line">	front = rear = <span class="number">0</span>;</span><br><span class="line">	rear = (rear + <span class="number">1</span>) % maxsize;</span><br><span class="line">	que[rear] = p;</span><br><span class="line">	<span class="keyword">while</span> (front != rear) &#123;</span><br><span class="line">		front = (front + <span class="number">1</span>) % maxsize;</span><br><span class="line">		q = que[front];</span><br><span class="line">		<span class="built_in">visit</span>(q);</span><br><span class="line">		<span class="keyword">if</span> (q-&gt;lchild) &#123;</span><br><span class="line">			rear = (rear + <span class="number">1</span>) % maxsize;</span><br><span class="line">			que[rear] = q-&gt;lchild;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (q-&gt;rchild) &#123;</span><br><span class="line">			rear = (rear + <span class="number">1</span>) % maxsize;</span><br><span class="line">			que[rear] = q-&gt;rchild;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<hr>
-<h5 id="求二叉树的深度"><a href="#求二叉树的深度" class="headerlink" title="求二叉树的深度"></a>求二叉树的深度</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getBTDepth</span><span class="params">(BTNode* bt)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> ldepth, rdepth;</span><br><span class="line">	<span class="keyword">if</span> (bt==<span class="literal">NULL</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		ldepth = <span class="built_in">getBTDepth</span>(bt-&gt;lchild);</span><br><span class="line">		rdepth = <span class="built_in">getBTDepth</span>(bt-&gt;rchild);</span><br><span class="line">		<span class="keyword">return</span> (ldepth &gt; rdepth ? ldepth : rdepth) + <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h5 id="求二叉树的宽度"><a href="#求二叉树的宽度" class="headerlink" title="求二叉树的宽度"></a>求二叉树的宽度</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	BTNode* p;</span><br><span class="line">	<span class="keyword">int</span> ino;</span><br><span class="line">&#125;Qu;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getMaxNode</span><span class="params">(BTNode* bt)</span> </span>&#123;</span><br><span class="line">	Qu queue[maxsize];<span class="comment">//此处要注意不能Qu *que,因为这样只能存Qu *类型。</span></span><br><span class="line">	BTNode* q;</span><br><span class="line">	<span class="keyword">int</span> front, rear;</span><br><span class="line">	front = rear = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> max = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> Lno = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (bt) &#123;</span><br><span class="line">		queue[++rear].p = bt;</span><br><span class="line">		queue[rear].ino = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">while</span> (front != rear) &#123;</span><br><span class="line">			q = queue[++front].p;</span><br><span class="line">			Lno = queue[front].ino;</span><br><span class="line">			<span class="keyword">if</span> (q-&gt;lchild) &#123;</span><br><span class="line">				queue[++rear].p = q-&gt;lchild;</span><br><span class="line">				queue[rear].ino = Lno + <span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (q-&gt;rchild) &#123;</span><br><span class="line">				queue[++rear].p = q-&gt;rchild;</span><br><span class="line">				queue[rear].ino = Lno + <span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		max = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= Lno;i++) &#123;</span><br><span class="line">		<span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>;j &lt;= rear;j++) </span><br><span class="line">			<span class="keyword">if</span> (i == queue[j].ino)</span><br><span class="line">				n++;</span><br><span class="line">			<span class="keyword">if</span> (max &lt; n)</span><br><span class="line">				max = n;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> max;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<p>附上测试用的main函数。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	BTNode* node = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">char</span>* ch = <span class="string">&quot;ABCDEFG&quot;</span>;</span><br><span class="line">	<span class="built_in">createBT</span>(node,ch,<span class="number">0</span>,<span class="built_in">strlen</span>(ch));</span><br><span class="line">	cout &lt;&lt;<span class="string">&quot;递归先序遍历:&quot;</span>&lt;&lt; endl;</span><br><span class="line">	<span class="built_in">preOrder</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;非递归先序遍历:&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">preOrderNonrecursion</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;递归中序遍历:&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">inOrder</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;非递归中序遍历:&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">inOrderNonCursion</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;递归后序遍历:&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">postOrder</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;非递归后序遍历:&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">postOrderNonRecursion</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;层次遍历:&quot;</span> &lt;&lt; endl;</span><br><span class="line">	<span class="built_in">level</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;二叉树深度为:&quot;</span> &lt;&lt; <span class="built_in">getBTDepth</span>(node);</span><br><span class="line">	cout &lt;&lt; endl;</span><br><span class="line">	cout &lt;&lt; <span class="string">&quot;二叉树宽度为:&quot;</span> &lt;&lt; <span class="built_in">getMaxNode</span>(node);</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>运行结果 <br></li>
-</ul>
-<p>1.先序序列 ：DBACFEG<br><br>2.中序序列 ：ABCDEFG <br><br>3.后序序列 ：ACBEGFD<br><br>4.层次遍历 : DBFACEG<br><br>5.深度3，宽度4</p>
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">二叉树</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/考研//" class="article-tag-list-link color3">考研</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2020/08/03/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-KMP算法-next-nextval手动求法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2020/07/22/KMP%E7%AE%97%E6%B3%95-next-nextval%E6%89%8B%E5%8A%A8%E6%B1%82%E6%B3%95/">KMP算法-next,nextval手动求法</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2020/07/22/KMP%E7%AE%97%E6%B3%95-next-nextval%E6%89%8B%E5%8A%A8%E6%B1%82%E6%B3%95/" class="archive-article-date">
-        <time datetime="2020-07-22T09:29:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-22</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <h1 id="KMP算法-next-nextval手动求法"><a href="#KMP算法-next-nextval手动求法" class="headerlink" title="KMP算法-next,nextval手动求法"></a>KMP算法-next,nextval手动求法</h1><h2 id="设模式串为ababaa，求其nextval"><a href="#设模式串为ababaa，求其nextval" class="headerlink" title="设模式串为ababaa，求其nextval"></a>设模式串为ababaa，求其nextval</h2><h3 id="第一步求next"><a href="#第一步求next" class="headerlink" title="第一步求next"></a>第一步求next</h3><p>next存在的意义就是当前字符不匹配，不必完全从头开始重新匹配，仅需从前面对称位置的下一个字符开始匹配即可。<br><img src="https://img-blog.csdn.net/20151023210839084" alt="1"><br>此时匹配串c与模式串d不匹配。非KMP算法会将模式串向后移动一位再次匹配。kmp算法因为next[D] = 3所以仅需将第三位与匹配串当前位置对齐即可。<br><img src="https://img-blog.csdn.net/20151023210947449" alt="1"></p>
-<h4 id="next的手动求法"><a href="#next的手动求法" class="headerlink" title="next的手动求法"></a>next的手动求法</h4><ul>
-<li>第一步 第一个元素next[1] = 0 (假设第一个元素的下标为1)</li>
-<li>第二步 第二个元素next[2] = 1(可以理解成前面没有元素对称即0+1,+1是让对称子串的下一个字符与主串比较，下面同理)</li>
-<li>第三步 第三个元素之前的元素为ab不存在对称，所以next[3] = 0+1=1;</li>
-<li>第四步 第四个元素之前的元素为aba最长对称子串为a，所以next[4] = 1+1 = 2</li>
-<li>第五步 第五个元素之前的元素为abab,最长对称子串为ab,所以next[5] = 2+1 = 3</li>
-<li>第六步 第六个元素之前的元素为ababa,最长对称子串为aba，所以next[6] = 3+1 = 4</li>
-</ul>
-<h3 id="第二步求nextval"><a href="#第二步求nextval" class="headerlink" title="第二步求nextval"></a>第二步求nextval</h3><p>nextval存在的意义就是当前字符j不匹配，则与回溯到next[j]的位置那个字符比较。</p>
-<ul>
-<li>若相同，则说明回溯到next[j]的位置的字符也不匹配，浪费了时间，所以当前的nextval的值改为nextval[next[j]]。</li>
-<li>若不相同，则nextval等于next[j]</li>
-</ul>
-<hr>
-<h4 id="nextval的手动求法"><a href="#nextval的手动求法" class="headerlink" title="nextval的手动求法"></a>nextval的手动求法</h4><ul>
-<li>第一步 第一个元素nextval[1] = 0 特殊标记</li>
-<li>第二步 第二个元素next[2] = 1,b!=a nextval[2] = next[2] = 1</li>
-<li>第三步 第三个元素next[3] = 1,a==a nextval[3] = nextval[next[3]] = 0</li>
-<li>第四步 第四个元素next[4] = 2,b==b nextval[4] = nextval[next[4]] = 1</li>
-<li>第五步 第五个元素next[5] = 3,a = a,nextval[5] = nextval[next[5]] = 0</li>
-<li>第六步 第六个元素next[6] = 4 a!=b nextval[6] = next[6] = 4</li>
-</ul>
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/考研//" class="article-tag-list-link color3">考研</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2020/07/22/KMP%E7%AE%97%E6%B3%95-next-nextval%E6%89%8B%E5%8A%A8%E6%B1%82%E6%B3%95/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next</a>
@@ -1619,6 +1790,18 @@ http &#123;
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">智能配电运维支持系统</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
             
             <div class="clearfix"></div>
