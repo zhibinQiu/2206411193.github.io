@@ -6,20 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://qiuzhibin.top">
-  <title>Archives: 2021 | 邱智斌的个人博客</title>
+  <title>renameFile | 邱智斌的个人博客</title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="description" content="本站是邱智斌的个人分享博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="邱智斌的个人博客">
-<meta property="og:url" content="https://qiuzhibin.top/archives/2021/page/4/index.html">
+  <meta name="description" content="需求需要将某文件夹下所有包含中文名称的文件改名 代码1234567891011121314# 批量替换某文件夹下特定字符# 传入参数：文件夹路径 要删除的字符串 要变成的字符串import osimport sysdef renameFile(path, deleteStr, changeTo&#x3D;&quot;-&quot;):    files &#x3D; os.listdir(path)    i &#x3D; 0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="renameFile">
+<meta property="og:url" content="https://qiuzhibin.top/2021/08/06/renameFile/index.html">
 <meta property="og:site_name" content="邱智斌的个人博客">
-<meta property="og:description" content="本站是邱智斌的个人分享博客">
+<meta property="og:description" content="需求需要将某文件夹下所有包含中文名称的文件改名 代码1234567891011121314# 批量替换某文件夹下特定字符# 传入参数：文件夹路径 要删除的字符串 要变成的字符串import osimport sysdef renameFile(path, deleteStr, changeTo&#x3D;&quot;-&quot;):    files &#x3D; os.listdir(path)    i &#x3D; 0">
 <meta property="og:locale">
+<meta property="og:image" content="https://qiuzhibin.top/2021/08/06/renameFile/1.jpg">
+<meta property="article:published_time" content="2021-08-05T17:24:48.000Z">
+<meta property="article:modified_time" content="2021-08-05T17:41:12.672Z">
 <meta property="article:author" content="邱智斌">
-<meta property="article:tag" content="Java,区块链，数据结构，算法，python,JavaWeb,技术,asr,语音识别">
+<meta property="article:tag" content="shell">
+<meta property="article:tag" content="asr">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qiuzhibin.top/2021/08/06/renameFile/1.jpg">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -185,167 +191,179 @@
               class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-renameFile" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
   
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2021/02/09/%E4%BA%8C%E5%8F%89%E5%A0%86%20copy/" class="archive-article-date">
-        <time datetime="2021-02-09T10:03:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-09</time>
-</a>
-
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2021/02/09/%E4%BA%8C%E5%8F%89%E5%A0%86%20copy/">二叉堆</a>
-	
+    <h1 class="article-title" itemprop="name">
+      renameFile
     </h1>
   
 
 
-        <div class="article-info info-on-right">
-          
+  
+  
+        
+        <span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+<a href="/2021/08/06/renameFile/" class="archive-article-date">
+        <time datetime="2021-08-05T17:24:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-06</time>
+</a>
+
+  
+  
+    
+<div style="margin-top:10px;">
+  <span class="post-time">
+    <span class="post-meta-item-icon">
+      <!-- fonts.scss -->
+      <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
+      <i class="icon-statistics"></i>
+      <span class="post-meta-item-text"> 字数统计:</span>
+      <span class="post-count">317字</span>
+    </span>
+  </span>
+
+  <span class="post-time">
+    &nbsp; | &nbsp;
+    <span class="post-meta-item-icon">
+      <i class="icon-book icon"></i>
+      <span class="post-meta-item-text"> 阅读时长≈</span>
+      <span class="post-count">1分</span>
+    </span>
+  </span>
+</div>
+
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>需要将某文件夹下所有包含中文名称的文件改名</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 批量替换某文件夹下特定字符</span></span><br><span class="line"><span class="comment"># 传入参数：文件夹路径 要删除的字符串 要变成的字符串</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">renameFile</span>(<span class="params">path, deleteStr, changeTo=<span class="string">&quot;-&quot;</span></span>):</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        old = path + os.sep + files[i]</span><br><span class="line">        new = path + os.sep + file.replace(deleteStr,changeTo)</span><br><span class="line">        os.rename(old, new)</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">renameFile(sys.argv[<span class="number">1</span>], sys.argv[<span class="number">2</span>],sys.argv[<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>调用的时候如果报错记得注意一下路径里时候包含括号也可以直接将路径将引号包含起来。</p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="string">&#x27;s/M_1234_K/K/&#x27;</span> M_1234_Kazakhstan*.wav</span><br><span class="line"><span class="comment"># Re_Kazakhstan_0102_194_1.wav</span></span><br><span class="line">rename <span class="string">&#x27;s/Re_K/K/&#x27;</span> Re_Kazakhstan*.wav</span><br></pre></td></tr></table></figure>
+<p>👆这段是亚超师兄提供的代码，用起来报错<br><img src="/2021/08/06/renameFile/1.jpg"><br>暂未查明原因就先用python替代了。</p>
+<blockquote>
+<p>这两天做语音识别的数据预处理工作，虽然工作繁琐了些，但同时也是对语音识别有了稍稍的了解，🙏亚超师兄的认真讲解，很棒的一位师兄，很不错。</p>
+</blockquote>
+<p>今晚还得看看他发的kaldi pdf,哎，没办法，谁让咱菜呢,希望以后能不忘初心，一步一个脚印走下去，不瞎扯了，看书去。。提醒自己每天都要有收获啊啊啊</p>
+
+    
+
+    
+
+    
+    <div class="declare"> 
+      <ul class="post-copyright">
+        <li>
+          <strong>本文作者：</strong>
+          邱智斌
+        </li>
+        <li>
+          <strong>本文链接：</strong>
+          <a href="https://qiuzhibin.top/2021/08/06/renameFile/" title="renameFile" target="_blank">https://qiuzhibin.top/2021/08/06/renameFile/</a>
+        </li>
+        <li>
+          <strong>版权声明： </strong>
+          本博客所有文章除特别声明外，均采用 <a href="https://www.apache.org/licenses/LICENSE-2.0.html" rel="external nofollow" target="_blank">Apache License 2.0</a> 许可协议。转载请注明出处！
+        </li>
+      </ul>
+    </div>
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">二叉堆</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+    
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2021/02/09/dingzhidaoru/" class="archive-article-date">
-        <time datetime="2021-02-09T09:15:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-09</time>
-</a>
 
+
+<nav id="article-nav">
+  
+  
+    <a href="/2021/08/05/createText/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">自动生成text文件</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2021/02/09/dingzhidaoru/">智能配电运维支持系统设计方案</a>
-	
-    </h1>
-  
-
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">智能配电运维支持系统</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9C%80%E6%B1%82"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2021/02/09/%E8%8B%A5%E4%BE%9D-springCloud%E6%90%AD%E5%BB%BA%E8%B8%A9%E5%9D%91/" class="archive-article-date">
-        <time datetime="2021-02-09T09:03:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-09</time>
-</a>
-
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-	
-	  <a class="archive-article-title" href="/2021/02/09/%E8%8B%A5%E4%BE%9D-springCloud%E6%90%AD%E5%BB%BA%E8%B8%A9%E5%9D%91/">若依-springCloud搭建踩坑</a>
-	
-    </h1>
-  
+        
+    </div>
+</aside>
 
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">开源</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">若依</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">SpringCloud</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/2021/page/3/">Prev</a><a class="page-number" href="/archives/2021/">1</a><a class="page-number" href="/archives/2021/page/2/">2</a><a class="page-number" href="/archives/2021/page/3/">3</a><span class="page-number current">4</span>
-    </nav>
-  
+
+
+
+
+
+
+
 
 
           </div>
@@ -390,8 +408,8 @@
 	var yiliaConfig = {
 		mathjax: 'true',
 		isHome: 'false',
-		isPost: 'false',
-		isArchive:'true',
+		isPost: 'true',
+		isArchive:'false',
 		isTag: 'false',
 		isCategory: 'false',
 		open_in_new: 'false',

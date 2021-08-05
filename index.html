@@ -191,6 +191,110 @@
             
 
   
+    <article id="post-renameFile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/08/06/renameFile/">renameFile</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/08/06/renameFile/" class="archive-article-date">
+        <time datetime="2021-08-05T17:24:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-06</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>需要将某文件夹下所有包含中文名称的文件改名</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 批量替换某文件夹下特定字符</span></span><br><span class="line"><span class="comment"># 传入参数：文件夹路径 要删除的字符串 要变成的字符串</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">renameFile</span>(<span class="params">path, deleteStr, changeTo=<span class="string">&quot;-&quot;</span></span>):</span></span><br><span class="line">    files = os.listdir(path)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">        old = path + os.sep + files[i]</span><br><span class="line">        new = path + os.sep + file.replace(deleteStr,changeTo)</span><br><span class="line">        os.rename(old, new)</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">renameFile(sys.argv[<span class="number">1</span>], sys.argv[<span class="number">2</span>],sys.argv[<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>调用的时候如果报错记得注意一下路径里时候包含括号也可以直接将路径将引号包含起来。</p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rename <span class="string">&#x27;s/M_1234_K/K/&#x27;</span> M_1234_Kazakhstan*.wav</span><br><span class="line"><span class="comment"># Re_Kazakhstan_0102_194_1.wav</span></span><br><span class="line">rename <span class="string">&#x27;s/Re_K/K/&#x27;</span> Re_Kazakhstan*.wav</span><br></pre></td></tr></table></figure>
+<p>👆这段是亚超师兄提供的代码，用起来报错<br><img src="/2021/08/06/renameFile/1.jpg"><br>暂未查明原因就先用python替代了。</p>
+<blockquote>
+<p>这两天做语音识别的数据预处理工作，虽然工作繁琐了些，但同时也是对语音识别有了稍稍的了解，🙏亚超师兄的认真讲解，很棒的一位师兄，很不错。</p>
+</blockquote>
+<p>今晚还得看看他发的kaldi pdf,哎，没办法，谁让咱菜呢,希望以后能不忘初心，一步一个脚印走下去，不瞎扯了，看书去。。提醒自己每天都要有收获啊啊啊</p>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/08/06/renameFile/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-createText" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1276,101 +1380,9 @@
 
 
   
-    <article id="post-dingzhidaoru" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2021/02/09/dingzhidaoru/">智能配电运维支持系统设计方案</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2021/02/09/dingzhidaoru/" class="archive-article-date">
-        <time datetime="2021-02-09T09:15:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-09</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <h2 id="面向服务-SOA"><a href="#面向服务-SOA" class="headerlink" title="面向服务(SOA)"></a>面向服务(SOA)</h2><p><img src="/2021/02/09/dingzhidaoru/01.png" alt="1"></p>
-<h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><p><img src="/2021/02/09/dingzhidaoru/02.png" alt="2"></p>
-<h2 id="定值导入流程"><a href="#定值导入流程" class="headerlink" title="定值导入流程"></a>定值导入流程</h2><p><img src="/2021/02/09/dingzhidaoru/03.png" alt="3"></p>
-<h2 id="系统概要设计"><a href="#系统概要设计" class="headerlink" title="系统概要设计"></a>系统概要设计</h2><p>智能配电运维支持系统<br>概要设计</p>
-<p>东方电子股份有限公司工程中心</p>
-<p>目录<br>1    概述    2<br>1.1    适用范围    2<br>1.2    系统开发总体目标    2<br>2    系统开发解决方案    4<br>2.1    系统总体架构    4<br>2.2    系统功能列表    5<br>2.3    模块功能介绍    6<br>3    系统配置    18<br>3.1    硬件配置    18<br>3.2    软件配置    18<br>4    预期效果    20<br>4.1    遵循标准，国内领先    20<br>4.2    规范整合，优化配置    20<br>4.3    统一协调，提升效益    20<br>4.4    协同发展，助推智能运检    21<br>4.5    经济运行，便捷高效    21</p>
-<p>1<br>概述<br>智能配电运维支持系统是集成融合配电网信息的有效手段，其主要目的在于通过一种标准化的方式来对配电相关数据和应用进行整合，形成具有统一标准的对象标识范围、接口规范以及信息模型，并为其提供所需的服务和数据。有效集成各个系统已有信息，不仅保存了丰富的配电网运行数据，而且成为各级配电网运维检修管理人员的不可或缺的重要数据来源。<br>1.1适用范围<br>本技术方案的适用范围是配电运维业务，整合PMS、DMS、GIS、运维抢修车辆管理等系统信息，展开配电运维检修、抢修、巡检处缺等各专业应用，并展开信息统计分析，数据挖掘，生成风险报告等方面的应用。以总线架构为基础，与各系统信息互联方便，功能扩充灵活。<br>1.2系统开发总体目标<br>系统开发建设致力于打造配电网运维检修数据中心，基于智能配电运维支持系统支撑系统为基础，针对目前配电网运维检修业务发展状况，解决系统存在的问题，从稳定化、标准化、规范化、可视化等多维度开展开发建设，进行软硬件架构、应用功能、数据分析挖掘等多方面开发建设工作。<br>1.提升架构稳定性：采用云计算技术，构建涵盖***电力配电网运维检修业务的企业私有云服务平台。<br>2.提升平台先进性：采用大数据技术，建设大数据分析服务平台，基于智能配电运维支持系统支撑系统开发高端的分析功能，开展基于海量数据的分析及数据挖掘工作，力争实现配电网的综合评价，全面感知配电网的运行状态并预测。<br>3.提升应用扩展性：打造全面融合配电网运维检修业务各环节的统一信息化集成应用支撑平台，适合业务需求，提高系统智能化信息感知能力和预测能力，促进配电网灵活地根据外界变化进行自适应调整。<br>4.提升系统易用性：改造图形界面，提供可视化、客观、易用的统一展示平台，给各业务部门带来直观便利的视觉成果，实现人性化的用户交互体验。</p>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">智能配电运维支持系统</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2021/02/09/dingzhidaoru/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next</a>
     </nav>
   
 
