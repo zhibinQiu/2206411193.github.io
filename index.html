@@ -191,6 +191,274 @@
             
 
   
+    <article id="post-生成uu2spk" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/08/07/%E7%94%9F%E6%88%90uu2spk/">生成uu2spk</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/08/07/%E7%94%9F%E6%88%90uu2spk/" class="archive-article-date">
+        <time datetime="2021-08-06T17:45:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-07</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">path = <span class="string">&#x27;/Users/tomsunsine/项目/pycharmproject/audioproject/testCuda/2/test/text1.txt&#x27;</span></span><br><span class="line">aim_path = <span class="string">&#x27;/Users/tomsunsine/项目/pycharmproject/audioproject/testCuda/2/test/utt2spk&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createspk2utt</span>(<span class="params">path, aim_path</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(aim_path, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> aim:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">                    line_data =line.split(<span class="string">&quot;.wav&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;/&quot;</span>)[-<span class="number">1</span>]+<span class="string">&quot;\t&quot;</span>+line.split(<span class="string">&quot;.wav&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;/&quot;</span>)[-<span class="number">2</span>]+<span class="string">&quot;\n&quot;</span></span><br><span class="line">                    <span class="built_in">print</span>(line_data)</span><br><span class="line">                    <span class="keyword">if</span> line.split(<span class="string">&quot;.wav&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;/&quot;</span>)[-<span class="number">2</span>] == <span class="string">&quot;小白羊&quot;</span>:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    aim.write(line_data)</span><br><span class="line">                <span class="keyword">except</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">createspk2utt(path,aim_path)</span><br></pre></td></tr></table></figure>
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/08/07/%E7%94%9F%E6%88%90uu2spk/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-生成wavscp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/08/07/%E7%94%9F%E6%88%90wavscp/">生成wavscp</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/08/07/%E7%94%9F%E6%88%90wavscp/" class="archive-article-date">
+        <time datetime="2021-08-06T17:44:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-07</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">path = <span class="string">&#x27;/2/test/text1.txt&#x27;</span></span><br><span class="line">aim_path = <span class="string">&#x27;/2/test/scp.txt&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createWavscp</span>(<span class="params">path, aim_path</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(aim_path, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> aim:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line"></span><br><span class="line">                    line_data =line.split(<span class="string">&quot;.wav&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;/&quot;</span>)[-<span class="number">1</span>]+<span class="string">&quot;\t&quot;</span>+line.split(<span class="string">&quot;.wav&quot;</span>)[<span class="number">0</span>]+<span class="string">&quot;.wav&quot;</span>+<span class="string">&quot;\n&quot;</span></span><br><span class="line">                    <span class="built_in">print</span>(line_data)</span><br><span class="line">                    <span class="keyword">if</span> line.split(<span class="string">&quot;.wav&quot;</span>)[<span class="number">0</span>].split(<span class="string">&quot;/&quot;</span>)[-<span class="number">2</span>] == <span class="string">&quot;小白羊&quot;</span>:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    aim.write(line_data)</span><br><span class="line">                <span class="keyword">except</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">createWavscp(path,aim_path)</span><br></pre></td></tr></table></figure>
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/08/07/%E7%94%9F%E6%88%90wavscp/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-生成text" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/08/07/%E7%94%9F%E6%88%90text/">生成text</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/08/07/%E7%94%9F%E6%88%90text/" class="archive-article-date">
+        <time datetime="2021-08-06T17:44:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-08-07</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">root_dir = <span class="string">&quot;/student/asr-2030/data/vn/clean_data&quot;</span></span><br><span class="line">aim_text_dir = <span class="string">&quot;/student/home/qiuzhibin/text.txt&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_text</span>(<span class="params">cur_path</span>):</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;当前路径:\n&quot;</span> + cur_path)</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> os.listdir(cur_path):</span><br><span class="line">        <span class="keyword">if</span> file.startswith(<span class="string">&#x27;.&#x27;</span>):  <span class="comment"># 跳过隐藏文件夹</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        file_path = os.path.join(cur_path, file)</span><br><span class="line">        <span class="keyword">if</span> os.path.isdir(file_path):  <span class="comment"># 如果是文件夹</span></span><br><span class="line">            create_text(file_path)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            fileName, extensionName = os.path.splitext(file_path)</span><br><span class="line">            <span class="keyword">if</span> extensionName == <span class="string">&quot;.txt&quot;</span>:</span><br><span class="line">                line_num = <span class="number">0</span>  <span class="comment"># 统计文件的总行数</span></span><br><span class="line">                <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                    <span class="keyword">for</span> _ <span class="keyword">in</span> f.readlines():</span><br><span class="line">                        line_num += <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> line_num == <span class="number">1</span>:  <span class="comment"># 说明文件只有一行内容,属于只包含文字类型的文件</span></span><br><span class="line">                    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                        line = f.readline()</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">&quot;当前读取的文件类型为txt文件,且只有一行内容:\n&quot;</span> + file_path)</span><br><span class="line">                        <span class="comment"># txt_data = line.rstrip(&#x27;\n&#x27;)</span></span><br><span class="line">                        line_data = fileName + <span class="string">&quot;.wav&quot;</span> + <span class="string">&quot;\t&quot;</span> + line.decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">                        <span class="comment"># print(&quot;拼接如下:\n&quot;,line_data)</span></span><br><span class="line">                        appendToFile(line_data)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&quot;当前读取的文件类型为txt文件,包含多条数据:\n&quot;</span> + file_path)</span><br><span class="line">                    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                        i = <span class="number">0</span></span><br><span class="line">                        <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">                            <span class="keyword">if</span> i &gt; <span class="number">0</span>:</span><br><span class="line">                                line_data = cur_path + <span class="string">&quot;/&quot;</span> + line.decode(<span class="string">&#x27;utf-8&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">                                <span class="comment"># print(&quot;拼接如下:\n&quot;,line_data)</span></span><br><span class="line">                                appendToFile(line_data)</span><br><span class="line">                            i += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> extensionName == <span class="string">&quot;.xlsx&quot;</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;当前读取的文件类型为xlsx文件,包含多条数据:\n&quot;</span> + file_path)</span><br><span class="line">                data = xlrd.open_workbook(file_path)</span><br><span class="line">                table = data.sheet_by_name(data.sheet_names()[<span class="number">0</span>])</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, table.nrows):</span><br><span class="line">                    line_data = cur_path + <span class="string">&quot;/&quot;</span> + table.cell(i, <span class="number">1</span>).value + <span class="string">&quot;\t&quot;</span> + table.cell(i, <span class="number">0</span>).value + <span class="string">&quot;\n&quot;</span></span><br><span class="line">                    appendToFile(line_data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">appendToFile</span>(<span class="params">data</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(aim_text_dir, <span class="string">&#x27;a&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    create_text(root_dir)</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">aim_text_dir = &quot;/student/asr-2030/data/vn/clean_data/text.txt&quot;</span></span><br><span class="line"><span class="string">cur_path = &quot;&quot;  shell调用传入参数</span></span><br><span class="line"><span class="string">create_text():</span></span><br><span class="line"><span class="string">for(当前目录下的所有文件)</span></span><br><span class="line"><span class="string">    if(文件是文件夹)</span></span><br><span class="line"><span class="string">       设置当前路径为该文件夹的路径</span></span><br><span class="line"><span class="string">       递归本函数</span></span><br><span class="line"><span class="string">       设置当前路径为当前路径的上一级路径</span></span><br><span class="line"><span class="string">    else</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       if(是txt结尾的文件)os.path.splitext()</span></span><br><span class="line"><span class="string">         打开文件</span></span><br><span class="line"><span class="string">            if(文件的行数==1)  </span></span><br><span class="line"><span class="string">                str:字符串内容拼接&#123;</span></span><br><span class="line"><span class="string">                wav_path:获取文件当前的路径，并将路径结尾改为wav</span></span><br><span class="line"><span class="string">                追加空格</span></span><br><span class="line"><span class="string">                text_content:获取txt的所有文本</span></span><br><span class="line"><span class="string">                追加换行符</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">                追加写入目标aim_text_dir</span></span><br><span class="line"><span class="string">            else</span></span><br><span class="line"><span class="string">              打开文件</span></span><br><span class="line"><span class="string">              将路径所在的那一列利用字符串拼接补全</span></span><br><span class="line"><span class="string">               n = 0 （标记当前行数）</span></span><br><span class="line"><span class="string">               while(n&lt;文件总行数)&#123;</span></span><br><span class="line"><span class="string">                  复制当前行</span></span><br><span class="line"><span class="string">                  追加写入目标aim_text_dir</span></span><br><span class="line"><span class="string">                  n++</span></span><br><span class="line"><span class="string">               &#125;  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       if(是xlsx结尾的文件)</span></span><br><span class="line"><span class="string">         打开文件</span></span><br><span class="line"><span class="string">         交换前两列的位置</span></span><br><span class="line"><span class="string">         将路径所在的那一列利用字符串拼接补全</span></span><br><span class="line"><span class="string">         n = 0 （标记当前行数）</span></span><br><span class="line"><span class="string">         while(n&lt;文件总行数)&#123;</span></span><br><span class="line"><span class="string">            将数据拼接成字符串中间以空格隔开</span></span><br><span class="line"><span class="string">            追加写入目标aim_text_dir</span></span><br><span class="line"><span class="string">            n++</span></span><br><span class="line"><span class="string">         &#125;  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/08/07/%E7%94%9F%E6%88%90text/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-renameFile" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1106,251 +1374,6 @@
     
     <p class="article-more-link">
       <a class="article-more-a" href="/2021/05/26/%E4%B8%83%E5%A4%A7%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-java面试经典之基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2021/02/16/java%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%85%B8%E4%B9%8B%E5%9F%BA%E7%A1%80/">java面试经典之基础</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2021/02/16/java%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%85%B8%E4%B9%8B%E5%9F%BA%E7%A1%80/" class="archive-article-date">
-        <time datetime="2021-02-16T04:47:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-16</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2021/02/16/java%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%85%B8%E4%B9%8B%E5%9F%BA%E7%A1%80/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-REST理论基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2021/02/11/REST%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/">REST理论基础.md</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2021/02/11/REST%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/" class="archive-article-date">
-        <time datetime="2021-02-11T05:43:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-11</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2021/02/11/REST%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-二叉堆 copy" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2021/02/09/%E4%BA%8C%E5%8F%89%E5%A0%86%20copy/">二叉堆</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2021/02/09/%E4%BA%8C%E5%8F%89%E5%A0%86%20copy/" class="archive-article-date">
-        <time datetime="2021-02-09T10:03:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-09</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p><img src="https://i.loli.net/2020/01/16/9ZOLXdMPxza1riy.jpg" alt="q0.jpg"></p>
-<h3 id="适用情况"><a href="#适用情况" class="headerlink" title="适用情况"></a>适用情况</h3><ul>
-<li>添加元素 </li>
-<li>获取最大值</li>
-<li>删除最大值</li>
-<li>TOP k问题，从海量数据中找出前k个元素。</li>
-</ul>
-<p>获取最大值如果做了全排序，太浪费时间，堆完美的实现上述要求，时间复杂度nlogn</p>
-    
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">数据结构</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">二叉堆</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2021/02/09/%E4%BA%8C%E5%8F%89%E5%A0%86%20copy/">展开全文 >></a>
     </p>
     
 
