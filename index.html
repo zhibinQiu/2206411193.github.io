@@ -191,6 +191,94 @@
             
 
   
+    <article id="post-wav" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+  
+  
+    <h1 itemprop="name">
+	
+	  <a class="article-title" href="/2021/10/27/wav/">wav 视频提取，声道分离，wav拼接（添加停顿符）</a>
+	
+    </h1>
+  
+
+
+  
+  
+<a href="/2021/10/27/wav/" class="archive-article-date">
+        <time datetime="2021-10-27T04:35:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-27</time>
+</a>
+
+  
+  
+    
+
+  
+  </header>
+  
+  <div class="article-entry" itemprop="articleBody">
+    
+    <p>以下三个操作均为批量操作，先使用find方法生成wav.scp(仅路径)</p>
+<h2 id="判断wav声道数目，对不同内容的声道进行分离"><a href="#判断wav声道数目，对不同内容的声道进行分离" class="headerlink" title="判断wav声道数目，对不同内容的声道进行分离"></a>判断wav声道数目，对不同内容的声道进行分离</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> wave</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> scipy.io <span class="keyword">import</span> wavfile</span><br><span class="line"><span class="comment"># wav.scp文件格式如下</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名要求 wav.scp</span></span><br><span class="line"><span class="comment"># 每行以wav结尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用方式 python drive_wav.py wav.scp文件路径</span></span><br><span class="line"></span><br><span class="line">wav_file_path = <span class="string">&#x27;&#x27;</span> <span class="comment">#包含所有音频文件路径的文件 find获取</span></span><br><span class="line">single_channel_scp = <span class="string">&#x27;&#x27;</span></span><br><span class="line">double_channel_scp = <span class="string">&#x27;&#x27;</span></span><br><span class="line">double_channel_same_scp = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">derive_wav</span>(<span class="params">wav_file_path</span>):</span></span><br><span class="line">      single_channel_scp = wav_file_path.split(<span class="string">&#x27;wav.scp&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;single_channel.scp&#x27;</span></span><br><span class="line">      double_channel_same_scp = wav_file_path.split(<span class="string">&#x27;wav.scp&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;double_channel_same.scp&#x27;</span></span><br><span class="line">      double_channel_scp = wav_file_path.split(<span class="string">&#x27;wav.scp&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;double_channel.scp&#x27;</span></span><br><span class="line">      <span class="keyword">with</span> <span class="built_in">open</span>(wav_file_path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">                <span class="built_in">print</span>(line)</span><br><span class="line">                <span class="keyword">if</span> line == <span class="string">&quot;\n&quot;</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span>  <span class="keyword">not</span> <span class="string">&#x27;.wav&#x27;</span> <span class="keyword">in</span> line:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                f = wave.<span class="built_in">open</span>(line.strip(), <span class="string">&#x27;r&#x27;</span>)</span><br><span class="line">                channels_num = f.getnchannels()</span><br><span class="line">                <span class="keyword">if</span> channels_num == <span class="number">2</span>:</span><br><span class="line">                    <span class="keyword">try</span>:</span><br><span class="line">                        sample_rate, wav_data = wavfile.read(line.strip())</span><br><span class="line">                        left = []</span><br><span class="line">                        right = []</span><br><span class="line">                        is_same = <span class="literal">True</span> </span><br><span class="line">                        <span class="keyword">for</span> item <span class="keyword">in</span> wav_data:</span><br><span class="line">                            <span class="comment">#此处比较双声道数据是否相同</span></span><br><span class="line">                            <span class="keyword">if</span> item[<span class="number">0</span>] != item[<span class="number">1</span>]:</span><br><span class="line">                                is_same = <span class="literal">False</span></span><br><span class="line">                                <span class="keyword">break</span></span><br><span class="line">                        <span class="keyword">if</span> <span class="keyword">not</span> is_same:</span><br><span class="line">                            <span class="keyword">for</span> item <span class="keyword">in</span> wav_data:</span><br><span class="line">                                left.append(item[<span class="number">0</span>])</span><br><span class="line">                                right.append(item[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">                    </span><br><span class="line">                        <span class="comment">#1.生成音频文件</span></span><br><span class="line">                            path = line.split(<span class="string">&#x27;.wav&#x27;</span>)[<span class="number">0</span>]</span><br><span class="line">                            check_dir(path)</span><br><span class="line">                            wavfile.write(path+<span class="string">&#x27;/1.wav&#x27;</span>, sample_rate, np.array(left))</span><br><span class="line">                            wavfile.write(path+<span class="string">&#x27;/2.wav&#x27;</span>, sample_rate, np.array(right))</span><br><span class="line">                            <span class="comment">#追加写入多通道不同内容scp文件</span></span><br><span class="line">                            <span class="built_in">print</span>(line+<span class="string">&#x27; 双声道不同内容wav文件，需要进行声道分离，耗时较长，写入double_channel_scp文件&#x27;</span>)</span><br><span class="line">                            write_into_scp(double_channel_scp,line)</span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            <span class="comment">#追加写入多通道相同内容scp文件</span></span><br><span class="line">                            <span class="built_in">print</span>(line+<span class="string">&#x27; 为双声道相同内容wav文件，无需分离声道，写入double_channel_same_scp文件&#x27;</span>)</span><br><span class="line">                            write_into_scp(double_channel_same_scp,line)</span><br><span class="line">                        <span class="comment">#2.此处并没有更新wav.scp，请重新生成wav.scp后运行wavConnect.py</span></span><br><span class="line">                    <span class="keyword">except</span> IOError <span class="keyword">as</span> e:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">&#x27;error is %s&#x27;</span> % <span class="built_in">str</span>(e))</span><br><span class="line">                    <span class="keyword">except</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">&#x27;other error&#x27;</span>, sys.exc_info())</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="comment">#只有一个通道</span></span><br><span class="line">                    <span class="comment">#追加写入单通道scp文件</span></span><br><span class="line">                    <span class="built_in">print</span>(line+<span class="string">&#x27; 为单声道wav文件，写入single_channel_scp文件&#x27;</span>)</span><br><span class="line">                    write_into_scp(single_channel_scp,line)</span><br><span class="line">                    <span class="keyword">pass</span></span><br><span class="line"><span class="comment"># params: 要追加的文件  要追加的内容</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_into_scp</span>(<span class="params">file, line</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> aim:</span><br><span class="line">        aim.write(line)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_dir</span>(<span class="params">path</span>):</span></span><br><span class="line">    isExists=os.path.exists(path)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> isExists:</span><br><span class="line">        <span class="comment"># 如果不存在则创建目录</span></span><br><span class="line">        os.makedirs(path) </span><br><span class="line"></span><br><span class="line">derive_wav(sys.argv[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="拼接wav，添加停顿音符"><a href="#拼接wav，添加停顿音符" class="headerlink" title="拼接wav，添加停顿音符"></a>拼接wav，添加停顿音符</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> ffmpy</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment"># wav.scp文件格式如下</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名要求 wav.scp</span></span><br><span class="line"><span class="comment"># 每行以wav结尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用方式 python extract_wav.py wav.scp文件路径</span></span><br><span class="line">video_path = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_wav</span>(<span class="params">video_path</span>):</span></span><br><span class="line">    video_scp_path = video_path.split(<span class="string">&#x27;wav.scp&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;video.scp&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(video_path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">                <span class="keyword">if</span> line == <span class="string">&quot;\n&quot;</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="comment"># 将wav文件生成到视频目录下</span></span><br><span class="line">                path =<span class="string">&#x27;&#x27;</span></span><br><span class="line">                <span class="keyword">if</span> line.strip().endswith(<span class="string">&#x27;.ts&#x27;</span>):</span><br><span class="line">                    path = line.split(<span class="string">&#x27;.ts&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;.wav&#x27;</span></span><br><span class="line">                <span class="keyword">elif</span> line.strip().endswith(<span class="string">&#x27;.mp4&#x27;</span>):</span><br><span class="line">                    path = line.split(<span class="string">&#x27;.mp4&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;.wav&#x27;</span></span><br><span class="line">                <span class="keyword">elif</span> line.strip().endswith(<span class="string">&#x27;.mpg&#x27;</span>):</span><br><span class="line">                    path = line.split(<span class="string">&#x27;.mpg&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;.wav&#x27;</span> </span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> path == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">                    <span class="keyword">try</span>:</span><br><span class="line">                        ff = ffmpy.FFmpeg(inputs=&#123;line.strip():<span class="literal">None</span>&#125;, outputs=&#123;path: [<span class="string">&#x27;-f&#x27;</span>,<span class="string">&#x27;wav&#x27;</span>,<span class="string">&#x27;-ar&#x27;</span>,<span class="string">&#x27;16000&#x27;</span>]&#125;)</span><br><span class="line">                        ff.run()</span><br><span class="line">                    <span class="keyword">except</span>:</span><br><span class="line">                        <span class="built_in">print</span>(sys.exc_info())</span><br><span class="line">                </span><br><span class="line">                <span class="comment">#生成scp文件</span></span><br><span class="line">                write_into_scp(video_scp_path,path)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_into_scp</span>(<span class="params">file, line</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> aim:</span><br><span class="line">        aim.write(line+<span class="string">&#x27;\n&#x27;</span>) </span><br><span class="line">extract_wav(sys.argv[<span class="number">1</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="从视频中提取音频"><a href="#从视频中提取音频" class="headerlink" title="从视频中提取音频"></a>从视频中提取音频</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> ffmpy</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment"># wav.scp文件格式如下</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件名要求 wav.scp</span></span><br><span class="line"><span class="comment"># 每行以wav结尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用方式 python extract_wav.py wav.scp文件路径</span></span><br><span class="line">video_path = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_wav</span>(<span class="params">video_path</span>):</span></span><br><span class="line">    video_scp_path = video_path.split(<span class="string">&#x27;wav.scp&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;video.scp&#x27;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(video_path, <span class="string">&quot;r&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">            <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">                <span class="keyword">if</span> line == <span class="string">&quot;\n&quot;</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="comment"># 将wav文件生成到视频目录下</span></span><br><span class="line">                path =<span class="string">&#x27;&#x27;</span></span><br><span class="line">                <span class="keyword">if</span> line.strip().endswith(<span class="string">&#x27;.ts&#x27;</span>):</span><br><span class="line">                    path = line.split(<span class="string">&#x27;.ts&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;.wav&#x27;</span></span><br><span class="line">                <span class="keyword">elif</span> line.strip().endswith(<span class="string">&#x27;.mp4&#x27;</span>):</span><br><span class="line">                    path = line.split(<span class="string">&#x27;.mp4&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;.wav&#x27;</span></span><br><span class="line">                <span class="keyword">elif</span> line.strip().endswith(<span class="string">&#x27;.mpg&#x27;</span>):</span><br><span class="line">                    path = line.split(<span class="string">&#x27;.mpg&#x27;</span>)[<span class="number">0</span>]+<span class="string">&#x27;.wav&#x27;</span> </span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> path == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">                    <span class="keyword">try</span>:</span><br><span class="line">                        ff = ffmpy.FFmpeg(inputs=&#123;line.strip():<span class="literal">None</span>&#125;, outputs=&#123;path: [<span class="string">&#x27;-f&#x27;</span>,<span class="string">&#x27;wav&#x27;</span>,<span class="string">&#x27;-ar&#x27;</span>,<span class="string">&#x27;16000&#x27;</span>]&#125;)</span><br><span class="line">                        ff.run()</span><br><span class="line">                    <span class="keyword">except</span>:</span><br><span class="line">                        <span class="built_in">print</span>(sys.exc_info())</span><br><span class="line">                </span><br><span class="line">                <span class="comment">#生成scp文件</span></span><br><span class="line">                write_into_scp(video_scp_path,path)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_into_scp</span>(<span class="params">file, line</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file, <span class="string">&quot;a&quot;</span>) <span class="keyword">as</span> aim:</span><br><span class="line">        aim.write(line+<span class="string">&#x27;\n&#x27;</span>) </span><br><span class="line">extract_wav(sys.argv[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+    
+
+    
+
+    
+
+  </div>
+  <div class="article-info article-info-index">
+    
+    
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">-asr</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+    
+
+    
+    <p class="article-more-link">
+      <a class="article-more-a" href="/2021/10/27/wav/">展开全文 >></a>
+    </p>
+    
+
+    
+    <div class="clearfix"></div>
+  </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-生成utt2spk" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -515,15 +603,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
         		</li>
       		
 		</ul>
@@ -794,11 +882,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">zip</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">shell</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -806,7 +894,7 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">asr</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">zip</a>
         		</li>
       		
 		</ul>
@@ -1294,115 +1382,6 @@
 
 
   
-    <article id="post-七大设计模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-  
-  
-    <h1 itemprop="name">
-	
-	  <a class="article-title" href="/2021/05/26/%E4%B8%83%E5%A4%A7%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">七大设计原则</a>
-	
-    </h1>
-  
-
-
-  
-  
-<a href="/2021/05/26/%E4%B8%83%E5%A4%A7%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-        <time datetime="2021-05-26T01:38:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-26</time>
-</a>
-
-  
-  
-    
-
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <p>七大设计原则为23中设计模式的基础，在设计过程中不必须要遵守，但要时刻铭记在心，避免出错，保证高内聚低耦合，稳定性，健壮性。</p>
-<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><h3 id="单一职责原则"><a href="#单一职责原则" class="headerlink" title="单一职责原则"></a>单一职责原则</h3><ul>
-<li>每一个类负责完成一个方面的内容（类或者方法力粒度上）<h3 id="接口隔离原则"><a href="#接口隔离原则" class="headerlink" title="接口隔离原则"></a>接口隔离原则</h3></li>
-<li>一个类依赖于接口某几个方法，则这各个接口只有某几个方法<h3 id="依赖倒转原则（依赖替换原则）"><a href="#依赖倒转原则（依赖替换原则）" class="headerlink" title="依赖倒转原则（依赖替换原则）"></a>依赖倒转原则（依赖替换原则）</h3></li>
-<li>依赖于抽象，不依赖于具体 （依赖：参数为接口）</li>
-<li>通过接口传递抽象，通过构造器传递，通过setter传递(实现依赖倒置)<h4 id="依赖倒转注意事项"><a href="#依赖倒转注意事项" class="headerlink" title="依赖倒转注意事项"></a>依赖倒转注意事项</h4></li>
-<li>底层模块要尽量有抽象类或接口</li>
-<li>变量的声明类型尽量是抽象类或接口，这样我们的变量引用和实际对象之间有一个缓冲层，利于程序拓展和优化<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//假设A继承B,A是一个具体的类，B是抽象的，C依赖于A，则将依赖关系转换成C依赖于B</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">B</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">implements</span> <span class="title">B</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">see</span><span class="params">(B b)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">     B obj = <span class="keyword">new</span> A();  <span class="comment">//向上转型</span></span><br><span class="line">     C c = <span class="keyword">new</span> C();</span><br><span class="line">     c.see(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-此时想要给A增加功能，仅需在B中添加即可。</li>
-<li>继承时要遵循里氏替换原则<h3 id="里氏替换原则"><a href="#里氏替换原则" class="headerlink" title="里氏替换原则"></a>里氏替换原则</h3></li>
-<li>里氏替换原则告诉我们对继承的思考，父类中已经实现好的方法，相当于建立了契约与规范，如果子类对其方法任意修改，贼会对继承体系造成破坏。</li>
-<li>继承在给程序设计带来便利的同时，也带来了弊端，比如用继承会对程序带来侵入性，程序的可移植性降低，增加对象之间的耦合性，如果一个类被其他类所继承，当对这个类修改时，必须要考虑到其所有子类，父类修改后，其子类可能会产生故障<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4>所有引用基类的地方必须能透明的使用子类的对象<h4 id="如何遵守里氏替换原则"><a href="#如何遵守里氏替换原则" class="headerlink" title="如何遵守里氏替换原则"></a>如何遵守里氏替换原则</h4></li>
-<li>在子类中尽量避免重写父类的方法</li>
-<li>继承实际上是增加了耦合性，在适当的情况下，可以通过聚合，组合，依赖来解决问题</li>
-<li>也可以提高B类的位置，将B类和A类共同继承一个更高的基类<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">  ...</span><br><span class="line">  这是种不好的写法！</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-
-    
-
-    
-
-    
-
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计原则</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2021/05/26/%E4%B8%83%E5%A4%A7%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next</a>
@@ -1417,7 +1396,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2019-2021 邱智斌
+    		&copy; 2019-2022 邱智斌
 		</div>
 		
       	<!-- <div class="footer-right"> -->
@@ -1556,6 +1535,18 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">asr</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">wx</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Springboot</a>
               </li>
              
@@ -1572,7 +1563,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">wx</a>
+                <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1580,7 +1571,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">leetcode</a>
+                <a href="javascript:void(0)" class="js-tag color1">shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1596,15 +1591,7 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">安全</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">XSS</a>
+                <a href="javascript:void(0)" class="js-tag color2">图</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1620,23 +1607,23 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">-asr</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">安全</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">XSS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">二叉堆</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">二叉树</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">图</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Vue</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1652,7 +1639,19 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">字符串</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">二叉树</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1668,11 +1667,15 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">智能配电运维支持系统</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">栈</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">桶排序</a>
+                <a href="javascript:void(0)" class="js-tag color4">zip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1680,7 +1683,15 @@
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">桶排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">红黑树</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">idea</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1696,39 +1707,11 @@
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">idea</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">链表</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">智能配电运维支持系统</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">shell</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">zip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">asr</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
             
             <div class="clearfix"></div>
